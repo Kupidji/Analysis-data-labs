@@ -104,7 +104,7 @@ tempAvg = table.groupby('Месяц')['T'].mean().reset_index() # группир
 
 #1 график (matplotlib.pyplot)
 plt.figure(figsize = (8, 6))
-plt.bar(table['Месяц'], table['T'])
+plt.bar(tempAvg['Месяц'], tempAvg['T'])
 plt.title('Среднемесячная температура')
 plt.xlabel('Месяц')
 plt.ylabel('Температура (в градусах)')
