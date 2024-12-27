@@ -18,7 +18,9 @@ def loadData(filepath):
 # Проверка и обработка данных
 def checkIsDataTypeNumber(dataframe):
     print("Проверка данных")
-    if not dataframe.select_dtypes(exclude=["number"]).columns.empty: print("Найдены не числовые данные")
+    if not dataframe.select_dtypes(exclude=["number"]).columns.empty:
+        print("Найдены не числовые данные")
+        print(dataframe.dtypes)
     else:
         print("Все данные - числовые")
         print(dataframe.dtypes)
@@ -80,12 +82,13 @@ def trainAndEvaluateModel(model, xTrain, xTest, yTrain, yTest):
     testPred = model.predict(xTest)
     trainPred = model.predict(xTrain)
 
-    print("Тестовая выборка:")
+    print("Обучающая выборка:")
+    print('RMSE:', np.sqrt(mean_squared_error(yTrain, trainPred))) # Показывает среднее квадратичное отклонение
+    # Измеряет количество отклонений в прогнозах, объясненных набором данных. Используется для оценки производительности модели
+    print('R^2:', r2_score(yTrain, trainPred))
+    print("\nТестовая выборка:")
     print('RMSE:', np.sqrt(mean_squared_error(yTest, testPred)))
     print('R^2:', r2_score(yTest, testPred))
-    print("\nОбучающая выборка:")
-    print('RMSE:', np.sqrt(mean_squared_error(yTrain, trainPred)))
-    print('R^2:', r2_score(yTrain, trainPred))
     printLine()
 
     return model
@@ -149,7 +152,7 @@ printLine()
 x = dataframe[features]
 y = dataframe[target]
 
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2, random_state=42)
+xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size = 0.2, random_state = 42)
 print("Размер обучающей выборки - ", xTrain.shape)
 print("Размер тестовой выборки - ", xTest.shape)
 printLine()
@@ -172,7 +175,7 @@ showPlotBoxplot(dataframe, target, "Ящик с усами для целевог
 
 x = dataframe[features]
 y = dataframe[target]
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2, random_state=42)
+xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size = 0.2, random_state = 42)
 
 linearModel = trainAndEvaluateModel(linearModel, xTrain, xTest, yTrain, yTest)
 

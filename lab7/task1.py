@@ -6,7 +6,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
-# Function for initial filtering
 def filterData(dataframe):
     dataframe = dataframe[dataframe['ВидПомещения'] == 'жилые помещения']
     dataframe = dataframe.drop(columns='ВидПомещения')
@@ -15,13 +14,11 @@ def filterData(dataframe):
     dataframe = dataframe.drop(columns='УИД_Брони')
     return dataframe
 
-# Function to check and ensure numeric data types
 def validateNumericData(dataframe, numericColumns):
     for column in numericColumns:
         dataframe[column] = pd.to_numeric(dataframe[column], errors='coerce')
     return dataframe
 
-# Function for binary encoding
 def encodeBinaryColumns(dataframe, binaryColumns):
     for column in binaryColumns:
         uniqueValues = dataframe[column].dropna().unique().tolist()
@@ -29,7 +26,6 @@ def encodeBinaryColumns(dataframe, binaryColumns):
         dataframe[column] = dataframe[column].map({uniqueValues[0]: 1, uniqueValues[1]: 0})
     return dataframe
 
-# Function for one-hot encoding
 def encodeCategoricalColumns(dataframe, categoricalColumns):
     return pd.get_dummies(dataframe, columns=categoricalColumns)
 
@@ -63,7 +59,6 @@ def handleMissingData(dataframe):
     dataframe = dataframe.dropna() # заметим, что оставшихся незаполненных данных не так уж и много, просто удалим их
     return dataframe
 
-# Function for feature engineering
 def addFeatures(dataframe):
     dataframe['ЦенаЗаКвадратныйМетр'] = dataframe['ФактическаяСтоимостьПомещения'] / dataframe['ПродаваемаяПлощадь']
     dataframe['СкидкаВПроцентах'] = (dataframe['СкидкаНаКвартиру'] / dataframe['ФактическаяСтоимостьПомещения']) * 100
@@ -77,13 +72,11 @@ def addFeatures(dataframe):
     printLine()
     return dataframe
 
-# Function for normalization
 def normalizeData(dataframe, discountColumn, numericColumns):
     dataframe[discountColumn] = MinMaxScaler(feature_range=(-0.5, 0.5)).fit_transform(dataframe[[discountColumn]])
     dataframe[numericColumns] = MinMaxScaler(feature_range=(0, 1)).fit_transform(dataframe[numericColumns]) # Выполню нормализацию по умолчанию
     return dataframe
 
-# Function to train and evaluate models
 def trainAndEvaluateModels(xTrain, xTest, yTrain, yTest):
     knnModel = KNeighborsClassifier().fit(xTrain, yTrain)
     treeModel = DecisionTreeClassifier().fit(xTrain, yTrain)
